@@ -26,6 +26,12 @@ namespace FastBin_Server.Database
             return snippet.Id;
         }
 
+        public TextSnippet RetrieveText(string id, string collectionName)
+        {
+            var _db = liteDatabase.GetCollection<TextSnippet>(collectionName);
+            return _db.FindById(id);
+        }
+
         private char GetRandomChar()
         {
             var chars = "abcdef0123456789";

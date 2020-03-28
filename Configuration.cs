@@ -10,10 +10,18 @@ namespace FastBin_Server
     public class Configuration
     {
         public string DatabasePath { get; set; }
-        public Configuration(string configPath = "./files/config.json")
+        public Configuration()
         {
-            if(!File.Exists(configPath))
+            this.DatabasePath = "./files/data.litedb";
+        }
+
+        public Configuration Load(string configPath = "./files/config.json")
+        {
+            if (String.IsNullOrEmpty(configPath))
+                configPath = "./files/config.json";
+            if (!File.Exists(configPath))
             {
+                Directory.CreateDirectory("./files");
                 this.DatabasePath = "./files/data.litedb";
                 File.WriteAllText(configPath, JsonConvert.SerializeObject(this, Formatting.Indented));
             }
@@ -22,6 +30,7 @@ namespace FastBin_Server
                 var tempConfig = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(configPath));
                 this.DatabasePath = tempConfig.DatabasePath;
             }
+            return this;
         }
     }
 }

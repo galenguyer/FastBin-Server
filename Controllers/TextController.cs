@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -13,15 +14,21 @@ namespace FastBin_Server.Controllers
     {
         // GET: api/text/id
         [HttpGet("{id}", Name = "Get")]
-        public string Get(string id)
+        public IActionResult Get(string id)
         {
-            return "value: " + id;
+            var snippet = Program.dbClient.RetrieveText(id, "text");
+            if (snippet == null)
+                return new NotFoundObjectResult($"Could not locate text with id {id}");
+            else return new OkObjectResult(snippet.Text);
         }
 
-        // POST: api/text
-        [HttpPost]
-        public void Post([FromBody] string value)
+        // POST: api/text/id
+        [HttpPost("{id}", Name = "Post")]
+        public ActionResult Post(string id)
         {
+            string data = new StreamReader(Request.Body).ReadToEndAsync().Result;
+            var finalId = Program.dbClient.InsertText(new Database.TextSnippet(id, data), "text");
+            return new OkObjectResult(finalId);
         }
     }
 }

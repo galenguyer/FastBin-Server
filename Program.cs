@@ -13,10 +13,12 @@ namespace FastBin_Server
     public class Program
     {
         public static Configuration Configuration = new Configuration();
-        public static LiteDBClient dbClient = new LiteDBClient(Configuration.DatabasePath);
+        public static LiteDBClient dbClient;
 
         public static void Main(string[] args)
         {
+            Configuration = Configuration.Load();
+            dbClient = new LiteDBClient(Configuration.DatabasePath);
             CreateHostBuilder(args).Build().Run();
         }
 
