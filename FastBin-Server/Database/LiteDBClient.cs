@@ -35,7 +35,7 @@ namespace FastBin_Server.Database
         private char GetRandomChar()
         {
             var chars = "abcdef0123456789";
-            return chars[random.Next(0, 17)];
+            return chars[random.Next(0, 16)];
         }
     }
 }
